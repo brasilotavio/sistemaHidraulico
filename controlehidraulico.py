@@ -115,6 +115,7 @@ sol_l = solve_ivp(modelo_linearizado, t_span, x0_l, args=(delta_u,), t_eval=t_ev
 h2_linear = sol_l.y[1] + x2_bar
 h2_nao_linear = sol_nl.y[1]
 
+
 # =============================================================================
 # 5. ANÁLISE DA FUNÇÃO DE TRANSFERÊNCIA
 # =============================================================================
@@ -176,7 +177,42 @@ ts = t_step[indices[-1]+1]
 print("Tempo de assentamento =", ts)
 
 # =============================================================================
-# 6. VISUALIZAÇÃO GRÁFICA PROFISSIONAL [cite: 36, 39]
+# 6. CONTROLABILIDADE E OBSERVABILIDADE
+# =============================================================================
+
+# Matriz de Controlabilidade
+Mc = np.hstack((B, A @ B))
+
+print("\n--- MATRIZ DE CONTROLABILIDADE ---")
+print(Mc)
+
+rank_C = np.linalg.matrix_rank(Mc)
+
+print("\nPosto da Matriz de Controlabilidade =", rank_C)
+
+if rank_C == A.shape[0]:
+    print("Sistema completamente controlável.")
+else:
+    print("Sistema NÃO é completamente controlável.")
+
+# Matriz de Observabilidade
+Mo = np.vstack((C, C @ A))
+
+print("\n--- MATRIZ DE OBSERVABILIDADE ---")
+print(Mo)
+
+rank_O = np.linalg.matrix_rank(Mo)
+
+print("\nPosto da Matriz de Observabilidade =", rank_O)
+
+if rank_O == A.shape[0]:
+    print("Sistema completamente observável.")
+else:
+    print("Sistema NÃO é completamente observável.")
+    
+    
+# =============================================================================
+# 7. VISUALIZAÇÃO GRÁFICA PROFISSIONAL [cite: 36, 39]
 # =============================================================================
 plt.figure(figsize=(11, 6))
 plt.plot(sol_nl.t, h2_nao_linear, 'b-', label='Modelo Não Linear (Físico)', linewidth=2.5)
