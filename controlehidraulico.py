@@ -212,7 +212,7 @@ else:
     
     
 # =============================================================================
-# 7. VISUALIZAÇÃO GRÁFICA PROFISSIONAL [cite: 36, 39]
+# . VISUALIZAÇÃO GRÁFICA PROFISSIONAL [cite: 36, 39]
 # =============================================================================
 plt.figure(figsize=(11, 6))
 plt.plot(sol_nl.t, h2_nao_linear, 'b-', label='Modelo Não Linear (Físico)', linewidth=2.5)
@@ -226,10 +226,34 @@ plt.grid(True, which='both', linestyle='--', alpha=0.7)
 plt.legend(loc='lower right', fontsize=10)
 plt.show()
 
+
 plt.figure(figsize=(10,6))
 plt.plot(t_step,y_step,lw=2)
 plt.xlabel('Tempo (s)')
 plt.ylabel('h2 (m)')
 plt.title('Resposta ao Degrau da Função de Transferência')
 plt.grid(True)
+plt.show()
+
+
+plt.figure(figsize=(7,5))
+plt.scatter(np.real(polos),
+            np.imag(polos),
+            marker='x',
+            s=100,
+            label='Polos')
+if len(zeros) > 0:
+    plt.scatter(np.real(zeros),
+                np.imag(zeros),
+                marker='o',
+                s=100,
+                facecolors='none',
+                label='Zeros')
+plt.axhline(0,color='black')
+plt.axvline(0,color='black')
+plt.xlabel('Parte Real')
+plt.ylabel('Parte Imaginária')
+plt.title('Mapa de Polos e Zeros')
+plt.grid(True)
+plt.legend()
 plt.show()
