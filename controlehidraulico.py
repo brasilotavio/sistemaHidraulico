@@ -10,6 +10,10 @@ Original file is located at
 import numpy as np
 from scipy.integrate import solve_ivp
 import matplotlib.pyplot as plt
+from scipy import signal
+from scipy.signal import TransferFunction, step
+from scipy.signal import ss2tf 
+
 
 # =============================================================================
 # 1. PARAMETRIZAÇÃO VIA MATRÍCULA (SID) DO GRUPO
@@ -36,7 +40,7 @@ print(f"Área dos Tubos (a): {a:.6f} m²")
 print("------------------------------------------\n")
 
 # Vazão nominal de operação fornecida pelo enunciado [cite: 122, 125]
-u_bar = 0.5  # Entrada nominal (m^3/s) [cite: 122, 125]
+u_bar = 0.005  # Entrada nominal (m^3/s) [cite: 122, 125]
 
 # =============================================================================
 # 2. CÁLCULO DO PONTO DE EQUILÍBRIO E MATRIZES DA JACOBIANA
@@ -112,7 +116,67 @@ h2_linear = sol_l.y[1] + x2_bar
 h2_nao_linear = sol_nl.y[1]
 
 # =============================================================================
-# 5. VISUALIZAÇÃO GRÁFICA PROFISSIONAL [cite: 36, 39]
+# 5. ANÁLISE DA FUNÇÃO DE TRANSFERÊNCIA
+# =============================================================================
+num, den = ss2tf(A, B, C, D)
+
+num = num[0]
+
+G = TransferFunction(num, den)
+
+polos = np.roots(den)
+zeros = np.roots(num)
+
+print("\n--- POLOS ---")
+print(polos)
+
+print("\n--- ZEROS ---")
+print(zeros)
+
+ganho_dc = np.polyval(num,0)/np.polyval(den,0)
+
+print("\n--- GANHO DC ---")
+print(ganho_dc)
+
+A_degrau = 0.0005
+
+t = np.linspace(0,150,2000)
+
+t_step,y_step = step(G,T=t)
+
+y_step = A_degrau*y_step
+
+valor_final = y_step[-1]
+
+pico = np.max(y_step)
+
+Mp = ((pico-valor_final)/valor_final)*100
+
+print("\nValor final =", valor_final)
+print("Sobressinal (%) =", Mp)
+
+y10 = 0.1*valor_final
+y90 = 0.9*valor_final
+
+idx10 = np.where(y_step>=y10)[0][0]
+idx90 = np.where(y_step>=y90)[0][0]
+
+tr = t_step[idx90]-t_step[idx10]
+
+print("Tempo de subida =", tr)
+
+banda = 0.02*valor_final
+
+indices = np.where(
+    np.abs(y_step-valor_final)>banda
+)[0]
+
+ts = t_step[indices[-1]+1]
+
+print("Tempo de assentamento =", ts)
+
+# =============================================================================
+# 6. VISUALIZAÇÃO GRÁFICA PROFISSIONAL [cite: 36, 39]
 # =============================================================================
 plt.figure(figsize=(11, 6))
 plt.plot(sol_nl.t, h2_nao_linear, 'b-', label='Modelo Não Linear (Físico)', linewidth=2.5)
@@ -124,4 +188,12 @@ plt.xlabel('Tempo (segundos)', fontsize=11)
 plt.ylabel('Nível do Tanque Inferior $h_2$ (metros)', fontsize=11)
 plt.grid(True, which='both', linestyle='--', alpha=0.7)
 plt.legend(loc='lower right', fontsize=10)
+plt.show()
+
+plt.figure(figsize=(10,6))
+plt.plot(t_step,y_step,lw=2)
+plt.xlabel('Tempo (s)')
+plt.ylabel('h2 (m)')
+plt.title('Resposta ao Degrau da Função de Transferência')
+plt.grid(True)
 plt.show()
