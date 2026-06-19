@@ -1,3 +1,11 @@
+import os
+
+# Descobre o caminho absoluto da pasta onde o próprio script está rodando
+diretorio_atual = os.path.dirname(os.path.abspath(__file__))
+
+# Se o script tentar buscar 'videos/abaixo_50.gif', ele vai usar o caminho correto
+caminho_gif = os.path.join(diretorio_atual, "videos", "abaixo_50.gif")
+
 import streamlit as st
 import numpy as np
 from scipy.integrate import solve_ivp
