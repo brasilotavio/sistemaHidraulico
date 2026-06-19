@@ -1,3 +1,4 @@
+import os
 import streamlit as st
 import numpy as np
 from scipy.integrate import solve_ivp
@@ -35,15 +36,18 @@ st.sidebar.markdown("Altere os parâmetros para recalcular os modelos e métrica
 u_bar = st.sidebar.slider("Vazão Nominal ($\overline{u}$)", 0.001, 0.010, 0.005, step=0.001, format="%.3f m³/s")
 porcentagem_degrau = st.sidebar.slider("Magnitude do Degrau (%)", -50, 100, 10, step=5)
 
+# 1. Descobre o caminho da pasta onde o arquivo controleHidraulico.py está localizado
+diretorio_do_script = os.path.dirname(os.path.abspath(__file__))
+
 # Lógica com 3 cenários: Redução de Vazão, Vazão Controlada e Vazão Crítica
 if porcentagem_degrau < 0:
-    caminho_gif = "../videos/sem_agua.gif"
+    caminho_gif = os.path.abspath(os.path.join(diretorio_do_script, "..", "videos", "sem_agua.gif"))
     texto_informativo = "📉 Redução de Vazão (Degrau Negativo: Níveis dos tanques vão descer!)"
 elif 0 <= porcentagem_degrau <= 50:
-    caminho_gif = "../videos/abaixo_50.gif"
+    caminho_gif = os.path.abspath(os.path.join(diretorio_do_script, "..", "videos", "abaixo_50.gif"))
     texto_informativo = "🎥 Fluxo Controlado (Pequena Amplitude: Aproximação Linear Confiável)"
 else:
-    caminho_gif = "../videos/acima_50.gif"
+    caminho_gif = os.path.abspath(os.path.join(diretorio_do_script, "..", "videos", "acima_50.gif"))
     texto_informativo = "🎥 Fluxo Turbulento (Larga Escala: Modelo Linear perde a validade)"
 
 # Exibe o texto explicativo na barra lateral
