@@ -58,7 +58,7 @@ else:
 st.sidebar.info(texto_informativo)
 
 # Exibe o GIF em loop correspondente
-st.sidebar.image(caminho_gif, use_container_width=True)
+#st.sidebar.image(caminho_gif, use_container_width=True)
 
 st.sidebar.markdown("---")
 st.sidebar.subheader("📐 Modificação Física dos Tubos")
