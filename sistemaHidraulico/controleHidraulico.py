@@ -1,11 +1,3 @@
-import os
-
-# Descobre o caminho absoluto da pasta onde o próprio script está rodando
-diretorio_atual = os.path.dirname(os.path.abspath(__file__))
-
-# Se o script tentar buscar 'videos/abaixo_50.gif', ele vai usar o caminho correto
-caminho_gif = os.path.join(diretorio_atual, "videos", "abaixo_50.gif")
-
 import streamlit as st
 import numpy as np
 from scipy.integrate import solve_ivp
@@ -45,20 +37,20 @@ porcentagem_degrau = st.sidebar.slider("Magnitude do Degrau (%)", -50, 100, 10, 
 
 # Lógica com 3 cenários: Redução de Vazão, Vazão Controlada e Vazão Crítica
 if porcentagem_degrau < 0:
-    caminho_gif = "videos/sem_agua.gif"
+    caminho_gif = "../videos/sem_agua.gif"
     texto_informativo = "📉 Redução de Vazão (Degrau Negativo: Níveis dos tanques vão descer!)"
 elif 0 <= porcentagem_degrau <= 50:
-    caminho_gif = "videos/abaixo_50.gif"
+    caminho_gif = "../videos/abaixo_50.gif"
     texto_informativo = "🎥 Fluxo Controlado (Pequena Amplitude: Aproximação Linear Confiável)"
 else:
-    caminho_gif = "videos/acima_50.gif"
+    caminho_gif = "../videos/acima_50.gif"
     texto_informativo = "🎥 Fluxo Turbulento (Larga Escala: Modelo Linear perde a validade)"
 
 # Exibe o texto explicativo na barra lateral
 st.sidebar.info(texto_informativo)
 
 # Exibe o GIF em loop correspondente
-#st.sidebar.image(caminho_gif, use_container_width=True)
+st.sidebar.image(caminho_gif, use_container_width=True)
 
 st.sidebar.markdown("---")
 st.sidebar.subheader("📐 Modificação Física dos Tubos")
