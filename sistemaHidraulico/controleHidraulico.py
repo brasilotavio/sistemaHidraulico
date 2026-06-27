@@ -263,8 +263,9 @@ with tab4:
             delta=f"{nivel_final_h2 - h2_bar:.4f} m (vs. equilíbrio inicial)"
         )
 
+        # CORREÇÃO AQUI: Mudado de \overline{u} para \overline{{u}}
         st.info(f"""
-        **Configuração do Ponto de Operação Original ($\overline{u}$):**
+        **Configuração do Ponto de Operação Original ($\overline{{u}}$):**
         * Altura de Equilíbrio $\overline{{h}}_1$: `{h1_bar:.4f} m`
         * Altura de Equilíbrio $\overline{{h}}_2$: `{h2_bar:.4f} m`
 
